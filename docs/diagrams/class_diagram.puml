@@ -1,0 +1,197 @@
+@startuml Class Diagram - LearnHub E-Learning Platform
+
+skinparam backgroundColor #FEFEFE
+skinparam classBackgroundColor #E3F2FD
+skinparam classBorderColor #1976D2
+skinparam stereotypeCBackgroundColor #BBDEFB
+
+title Class Diagram: LearnHub E-Learning Platform
+
+' ========== USER CLASSES ==========
+abstract class User {
+    - id: number
+    - email: string
+    - password: string
+    - name: string
+    - avatar: string
+    - role: UserRole
+    --
+    + login(email, password): AuthResult
+    + logout(): void
+    + updateProfile(): void
+}
+
+enum UserRole {
+    CUSTOMER
+    DOSEN
+    ADMIN
+}
+
+class Customer {
+    - enrolledCourses: Course[]
+    - completedCourses: Course[]
+    - certificates: Certificate[]
+    --
+    + enrollCourse(courseId): void
+    + watchCourse(courseId): void
+    + completeCourse(courseId): void
+    + claimCertificate(courseId): Certificate
+    + submitReview(courseId, review): Review
+}
+
+class Dosen {
+    - courses: Course[]
+    - totalStudents: number
+    - averageRating: number
+    --
+    + uploadCourse(course): Course
+    + editCourse(courseId): void
+    + viewStatistics(): Stats
+}
+
+class Admin {
+    --
+    + manageUsers(): void
+    + manageCourses(): void
+    + approveReview(reviewId): void
+    + rejectReview(reviewId): void
+    + manageCertificates(): void
+    + viewDashboard(): DashboardStats
+}
+
+' ========== COURSE CLASSES ==========
+class Course {
+    - id: number
+    - title: string
+    - description: string
+    - instructor: string
+    - instructorAvatar: string
+    - category: string
+    - level: Level
+    - duration: string
+    - lessons: number
+    - students: number
+    - rating: number
+    - reviews: number
+    - price: number
+    - isFree: boolean
+    - thumbnail: string
+    - tags: string[]
+    - lastUpdated: string
+    - chapters: Chapter[]
+    --
+    + getDetails(): CourseDetail
+    + getTotalLessons(): number
+}
+
+enum Level {
+    BEGINNER
+    INTERMEDIATE
+    ADVANCED
+    ALL_LEVELS
+}
+
+class Chapter {
+    - title: string
+    - lessons: Lesson[]
+    --
+    + getLessonCount(): number
+}
+
+class Lesson {
+    - id: number
+    - title: string
+    - duration: string
+    - completed: boolean
+    --
+    + markComplete(): void
+}
+
+class Category {
+    - id: number
+    - name: string
+    - icon: string
+    - count: number
+}
+
+' ========== REVIEW & CERTIFICATE ==========
+class Review {
+    - id: number
+    - courseId: number
+    - userId: number
+    - userName: string
+    - rating: number
+    - comment: string
+    - status: ReviewStatus
+    - createdAt: string
+    --
+    + approve(): void
+    + reject(): void
+}
+
+enum ReviewStatus {
+    PENDING
+    APPROVED
+    REJECTED
+}
+
+class Certificate {
+    - id: string
+    - courseId: number
+    - courseName: string
+    - issuedDate: string
+    - userName: string
+    --
+    + verify(certId): boolean
+    + generateId(): string
+}
+
+' ========== CONTEXT/STATE ==========
+class AuthContext {
+    - user: User
+    - enrolledCourses: number[]
+    - completedCourses: number[]
+    - certificates: Certificate[]
+    --
+    + login(email, password): AuthResult
+    + logout(): void
+    + register(name, email, password): AuthResult
+    + enrollCourse(courseId): void
+    + completeCourse(courseId): void
+    + claimCertificate(courseId, name): string
+}
+
+class ThemeContext {
+    - theme: Theme
+    --
+    + toggleTheme(): void
+}
+
+enum Theme {
+    DARK
+    LIGHT
+}
+
+' ========== RELATIONSHIPS ==========
+User <|-- Customer
+User <|-- Dosen
+User <|-- Admin
+User --> UserRole
+
+Course --> Level
+Course "1" *-- "many" Chapter
+Chapter "1" *-- "many" Lesson
+Course --> Category
+
+Customer "many" -- "many" Course : enrolls
+Dosen "1" -- "many" Course : creates
+Customer "1" -- "many" Certificate : owns
+Customer "1" -- "many" Review : writes
+Course "1" -- "many" Review : has
+
+Review --> ReviewStatus
+AuthContext --> User
+AuthContext --> Certificate
+ThemeContext --> Theme
+
+@enduml

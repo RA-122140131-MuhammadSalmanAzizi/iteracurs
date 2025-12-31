@@ -1,0 +1,120 @@
+@startuml Use Case Diagram - LearnHub E-Learning Platform
+
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+skinparam backgroundColor #FEFEFE
+
+' Actors
+actor "Guest" as Guest #LightGray
+actor "Customer\n(Student)" as Customer #LightBlue
+actor "Dosen\n(Instructor)" as Dosen #LightGreen
+actor "Admin" as Admin #LightCoral
+
+' System Boundary
+rectangle "LearnHub E-Learning Platform" {
+    
+    ' === Guest Use Cases ===
+    package "Public Access" {
+        usecase "Browse Courses" as UC1
+        usecase "View Course Detail" as UC2
+        usecase "Search Courses" as UC3
+        usecase "Filter Courses" as UC4
+        usecase "Verify Certificate" as UC5
+        usecase "Register Account" as UC6
+        usecase "Login" as UC7
+        usecase "Toggle Dark/Light Mode" as UC8
+    }
+    
+    ' === Customer Use Cases ===
+    package "Customer Features" {
+        usecase "Enroll in Course" as UC10
+        usecase "Watch Course Video" as UC11
+        usecase "Track Progress" as UC12
+        usecase "Complete Course" as UC13
+        usecase "Claim Certificate" as UC14
+        usecase "View My Certificates" as UC15
+        usecase "Submit Review" as UC16
+        usecase "View Profile" as UC17
+        usecase "Update Profile" as UC18
+        usecase "Logout" as UC19
+    }
+    
+    ' === Dosen Use Cases ===
+    package "Instructor Features" {
+        usecase "View Dashboard" as UC20
+        usecase "View My Courses" as UC21
+        usecase "Upload New Course" as UC22
+        usecase "Edit Course" as UC23
+        usecase "View Course Statistics" as UC24
+    }
+    
+    ' === Admin Use Cases ===
+    package "Admin Features" {
+        usecase "View Admin Dashboard" as UC30
+        usecase "Manage Users" as UC31
+        usecase "Manage All Courses" as UC32
+        usecase "Approve/Reject Reviews" as UC33
+        usecase "Manage Certificates" as UC34
+        usecase "View System Statistics" as UC35
+    }
+}
+
+' Guest Connections
+Guest --> UC1
+Guest --> UC2
+Guest --> UC3
+Guest --> UC4
+Guest --> UC5
+Guest --> UC6
+Guest --> UC7
+Guest --> UC8
+
+' Customer Connections (inherits Guest)
+Customer --> UC1
+Customer --> UC2
+Customer --> UC3
+Customer --> UC4
+Customer --> UC5
+Customer --> UC8
+Customer --> UC10
+Customer --> UC11
+Customer --> UC12
+Customer --> UC13
+Customer --> UC14
+Customer --> UC15
+Customer --> UC16
+Customer --> UC17
+Customer --> UC18
+Customer --> UC19
+
+' Dosen Connections
+Dosen --> UC8
+Dosen --> UC17
+Dosen --> UC18
+Dosen --> UC19
+Dosen --> UC20
+Dosen --> UC21
+Dosen --> UC22
+Dosen --> UC23
+Dosen --> UC24
+
+' Admin Connections
+Admin --> UC8
+Admin --> UC17
+Admin --> UC18
+Admin --> UC19
+Admin --> UC30
+Admin --> UC31
+Admin --> UC32
+Admin --> UC33
+Admin --> UC34
+Admin --> UC35
+
+' Include/Extend Relationships
+UC10 ..> UC7 : <<include>>
+UC11 ..> UC10 : <<include>>
+UC14 ..> UC13 : <<include>>
+UC16 ..> UC11 : <<include>>
+
+@enduml

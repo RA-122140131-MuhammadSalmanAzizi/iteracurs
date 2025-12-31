@@ -1,0 +1,344 @@
+.auth-page {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+/* Auth Container */
+.auth-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: var(--bg-primary);
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 440px;
+}
+
+.auth-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 2.5rem;
+}
+
+.auth-logo .logo-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: var(--primary-500);
+    color: white;
+    border-radius: var(--border-radius-lg);
+}
+
+.auth-header {
+    margin-bottom: 2rem;
+}
+
+.auth-header h1 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.auth-header p {
+    color: var(--text-secondary);
+}
+
+/* Error */
+.auth-error {
+    padding: 0.875rem 1rem;
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: var(--border-radius-lg);
+    color: var(--error);
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Form */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.auth-form label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.input-with-icon {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0 1rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    transition: all var(--transition-fast);
+}
+
+.input-with-icon:focus-within {
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px rgba(165, 42, 42, 0.2);
+}
+
+.input-with-icon svg {
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.input-with-icon input {
+    flex: 1;
+    border: none;
+    padding: 0.875rem 0;
+    background: transparent;
+    outline: none;
+    box-shadow: none;
+    width: 100%;
+}
+
+.input-with-icon input:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+.password-toggle {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: color var(--transition-fast);
+}
+
+.password-toggle:hover {
+    color: var(--text-primary);
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.checkbox-label input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary-500);
+}
+
+.checkbox-label.terms {
+    align-items: flex-start;
+}
+
+.checkbox-label.terms span {
+    line-height: 1.5;
+}
+
+.checkbox-label a {
+    color: var(--primary-400);
+}
+
+.checkbox-label a:hover {
+    text-decoration: underline;
+}
+
+.forgot-link {
+    font-size: 0.875rem;
+    color: var(--primary-400);
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+/* Divider */
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-color);
+}
+
+.auth-divider span {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+/* Demo Accounts */
+.demo-accounts {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.demo-accounts p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+}
+
+.demo-list {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.demo-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.demo-btn:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--primary-500);
+    color: var(--primary-400);
+}
+
+/* Footer */
+.auth-footer {
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-top: 1.5rem;
+}
+
+.auth-footer a {
+    color: var(--primary-400);
+    font-weight: 500;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Visual Section */
+.auth-visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: var(--primary-600);
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-visual::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-mesh);
+    opacity: 0.3;
+}
+
+.visual-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 400px;
+}
+
+.visual-content h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.visual-content p {
+    font-size: 1.125rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+}
+
+.visual-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    text-align: left;
+}
+
+.feature {
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-md);
+    font-size: 0.9375rem;
+    backdrop-filter: blur(10px);
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    .auth-page {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-visual {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-card {
+        padding: 0;
+    }
+
+    .demo-list {
+        flex-direction: column;
+    }
+}
+
+/* ====== LIGHT THEME OVERRIDES ====== */
+[data-theme="light"] .input-with-icon {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .demo-btn {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .demo-btn:hover {
+    background: rgba(255, 255, 255, 1);
+}
+
+[data-theme="light"] .visual-content h2,
+[data-theme="light"] .visual-content p {
+    color: white;
+}
+
+[data-theme="light"] .feature {
+    color: white;
+}

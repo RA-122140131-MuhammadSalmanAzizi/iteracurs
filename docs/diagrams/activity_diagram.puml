@@ -1,0 +1,85 @@
+@startuml Activity Diagram - Course Enrollment and Completion Flow
+
+skinparam backgroundColor #FEFEFE
+skinparam ActivityBackgroundColor #E8F5E9
+skinparam ActivityBorderColor #388E3C
+skinparam ActivityDiamondBackgroundColor #FFF9C4
+skinparam ActivityDiamondBorderColor #F9A825
+
+title Activity Diagram: Course Enrollment to Certificate Claim
+
+|Guest/Customer|
+start
+
+:Browse Available Courses;
+
+:Select Course;
+
+:View Course Detail;
+
+if (User Logged In?) then (No)
+    :Redirect to Login Page;
+    
+    if (Has Account?) then (Yes)
+        :Enter Credentials;
+        :Login;
+    else (No)
+        :Register New Account;
+        :Create Account;
+    endif
+endif
+
+|Customer|
+
+if (Already Enrolled?) then (Yes)
+    :Continue Learning;
+else (No)
+    if (Course is Free?) then (Yes)
+        :Enroll for Free;
+    else (No)
+        :Process Payment;
+        :Enroll in Course;
+    endif
+endif
+
+:Access Course Content;
+
+repeat
+    :Watch Video Lesson;
+    :Mark Lesson Complete;
+    :Update Progress;
+repeat while (More Lessons?) is (Yes)
+->No;
+
+:Complete All Lessons;
+
+:Course Marked as Completed;
+
+if (Want Certificate?) then (Yes)
+    :Claim Certificate;
+    :Generate Certificate ID;
+    :Certificate Added to Profile;
+    
+    :View My Certificates;
+endif
+
+if (Want to Leave Review?) then (Yes)
+    :Write Review;
+    :Submit Review for Approval;
+    
+    |Admin|
+    :Review Submitted;
+    
+    if (Review Appropriate?) then (Yes)
+        :Approve Review;
+        :Review Published;
+    else (No)
+        :Reject Review;
+    endif
+endif
+
+|Customer|
+
+stop
+
+@enduml

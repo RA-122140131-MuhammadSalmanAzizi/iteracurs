@@ -1,0 +1,237 @@
+.certificates-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.certificates-main {
+    flex: 1;
+    padding: 6rem 0 4rem;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.header-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    background: rgba(165, 42, 42, 0.15);
+    color: var(--primary-400);
+    border-radius: var(--border-radius-xl);
+    margin-bottom: 1.5rem;
+}
+
+.page-header h1 {
+    margin-bottom: 0.5rem;
+}
+
+.page-header p {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+}
+
+/* Certificates Grid */
+.certificates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 1.5rem;
+}
+
+.certificate-card {
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-xl);
+    padding: 2rem;
+    overflow: hidden;
+    transition: all var(--transition-normal);
+}
+
+.certificate-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary-500);
+    box-shadow: var(--shadow-glow);
+}
+
+.certificate-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 8px 24px rgba(165, 42, 42, 0.3);
+}
+
+.certificate-badge svg {
+    color: white;
+}
+
+.certificate-content h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.certificate-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.certificate-meta .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.certificate-meta svg {
+    color: var(--text-muted);
+}
+
+.cert-id-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.copy-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    margin-left: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.copy-btn:hover {
+    background: var(--primary-500);
+    border-color: var(--primary-500);
+    color: white;
+}
+
+.certificate-recipient {
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-lg);
+    margin-bottom: 1.5rem;
+}
+
+.certificate-recipient p {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+}
+
+.certificate-recipient h4 {
+    font-size: 1.125rem;
+    color: var(--primary-400);
+}
+
+.certificate-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.certificate-actions .btn {
+    flex: 1;
+}
+
+/* Decoration */
+.certificate-decoration {
+    position: absolute;
+    top: 0;
+    right: 0;
+    pointer-events: none;
+}
+
+.decoration-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    opacity: 0.1;
+}
+
+.decoration-circle:first-child {
+    width: 120px;
+    height: 120px;
+    top: -40px;
+    right: -40px;
+}
+
+.decoration-circle:last-child {
+    width: 80px;
+    height: 80px;
+    top: 60px;
+    right: 40px;
+}
+
+/* Empty State */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-xl);
+}
+
+.empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 120px;
+    background: var(--bg-secondary);
+    border-radius: 50%;
+    margin-bottom: 1.5rem;
+    color: var(--text-muted);
+}
+
+.empty-state h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .certificates-main {
+        padding: 5rem 0 3rem;
+    }
+
+    .certificates-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .certificate-actions {
+        flex-direction: column;
+    }
+}
+
