@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
     Users, TrendingUp, DollarSign, BookOpen, MessageSquare, Award, Settings, X, PlusCircle,
-    Image, CheckCircle, User, Database, BarChart2, Megaphone
+    Star, User, Database, BarChart2
 } from 'lucide-react';
 import { useAuth } from '../../App';
 import { stats } from '../../data/courses';
@@ -16,11 +16,9 @@ const AdminDashboard = () => {
     const [activeActions, setActiveActions] = useState([
         { id: 'data', label: 'Data Management', path: '/admin/data', icon: Database, visible: true },
         { id: 'analytics', label: 'Analytics', path: '/admin/analytics', icon: BarChart2, visible: true },
-        { id: 'approvals', label: 'Approvals & Reviews', path: '/admin/approvals', icon: CheckCircle, visible: true },
-        { id: 'broadcasts', label: 'Broadcasts', path: '/admin/broadcasts', icon: Megaphone, visible: true },
-        { id: 'cms', label: 'CMS', path: '/admin/cms', icon: Image, visible: false },
-        { id: 'settings', label: 'Course Settings', path: '/admin/settings', icon: Settings, visible: false },
-        { id: 'profile', label: 'My Profile', path: '/customer/profile', icon: User, visible: false }
+        { id: 'reviews', label: 'Reviews', path: '/admin/reviews', icon: Star, visible: true },
+        { id: 'settings', label: 'Course Settings', path: '/admin/settings', icon: Settings, visible: true },
+        { id: 'profile', label: 'My Profile', path: '/profile', icon: User, visible: false }
     ]);
 
     const toggleAction = (id) => {

@@ -1,123 +1,199 @@
 import { useState } from 'react';
 import {
-    MessageSquare, Check, X, Star
+    CheckCircle, XCircle, Star, MessageSquare, User, Search
 } from 'lucide-react';
-import { reviews } from '../../data/courses';
 import AdminSidebar from '../../components/AdminSidebar';
+import { courses, reviews } from '../../data/courses';
 import './AdminPages.css';
 
 const AdminReviews = () => {
-    const [statusFilter, setStatusFilter] = useState('pending');
-    const [reviewsList, setReviewsList] = useState(reviews);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filterStatus, setFilterStatus] = useState('pending');
 
-    const filteredReviews = reviewsList.filter(review => {
-        return statusFilter === 'all' || review.status === statusFilter;
+    // Get all reviews with course names
+    const allReviews = reviews.map(review => {
+        const course = courses.find(c => c.id === review.courseId);
+        return { ...review, courseName: course?.title || 'Unknown Course' };
     });
 
-    const handleApprove = (reviewId) => {
-        setReviewsList(reviewsList.map(r =>
-            r.id === reviewId ? { ...r, status: 'approved' } : r
-        ));
-    };
+    const [reviewsList, setReviewsList] = useState(allReviews);
 
-    const handleReject = (reviewId) => {
-        setReviewsList(reviewsList.map(r =>
-            r.id === reviewId ? { ...r, status: 'rejected' } : r
-        ));
-    };
+    // Filter reviews
+    const filteredReviews = reviewsList.filter(r => {
+        const matchSearch = r.user.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            r.courseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            r.comment.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchStatus = filterStatus === 'all' || r.status === filterStatus;
+        return matchSearch && matchStatus;
+    });
 
     const pendingCount = reviewsList.filter(r => r.status === 'pending').length;
+    const approvedCount = reviewsList.filter(r => r.status === 'approved').length;
+
+    const handleApproveReview = (id) => {
+        setReviewsList(reviewsList.map(r =>
+            r.id === id ? { ...r, status: 'approved' } : r
+        ));
+        alert('Review approved and published.');
+    };
+
+    const handleRejectReview = (id) => {
+        if (window.confirm('Reject and delete this review?')) {
+            setReviewsList(reviewsList.filter(r => r.id !== id));
+        }
+    };
 
     return (
         <div className="admin-page">
             <AdminSidebar />
-
             <main className="admin-main">
                 <header className="admin-header">
                     <div>
                         <h1>Reviews Management</h1>
-                        <p>Approve or reject customer reviews</p>
+                        <p>Approve or reject user reviews for courses</p>
                     </div>
                 </header>
 
-                <section className="content-section">
-                    <div className="filter-bar">
-                        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-                            <option value="all">All Reviews</option>
-                            <option value="pending">Pending ({pendingCount})</option>
-                            <option value="approved">Approved</option>
-                            <option value="rejected">Rejected</option>
-                        </select>
+                {/* Stats Summary */}
+                <div className="stats-grid" style={{ marginBottom: '1.5rem' }}>
+                    <div className="stat-card warning" style={{ cursor: 'pointer' }} onClick={() => setFilterStatus('pending')}>
+                        <div className="stat-header">
+                            <div className="stat-icon"><MessageSquare size={24} /></div>
+                        </div>
+                        <p className="stat-value">{pendingCount}</p>
+                        <p className="stat-label">Pending Reviews</p>
+                    </div>
+                    <div className="stat-card success" style={{ cursor: 'pointer' }} onClick={() => setFilterStatus('approved')}>
+                        <div className="stat-header">
+                            <div className="stat-icon"><CheckCircle size={24} /></div>
+                        </div>
+                        <p className="stat-value">{approvedCount}</p>
+                        <p className="stat-label">Approved Reviews</p>
+                    </div>
+                    <div className="stat-card secondary" style={{ cursor: 'pointer' }} onClick={() => setFilterStatus('all')}>
+                        <div className="stat-header">
+                            <div className="stat-icon"><Star size={24} /></div>
+                        </div>
+                        <p className="stat-value">{reviewsList.length}</p>
+                        <p className="stat-label">Total Reviews</p>
+                    </div>
+                </div>
+
+                {/* Filters */}
+                <div className="filters-bar-inline">
+                    <div className="search-minimal">
+                        <Search size={16} />
+                        <input
+                            type="text"
+                            placeholder="Search reviews..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                    <select
+                        className="filter-select"
+                        value={filterStatus}
+                        onChange={(e) => setFilterStatus(e.target.value)}
+                    >
+                        <option value="all">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                    </select>
+                </div>
+
+                <div className="content-section">
+                    <div className="section-header">
+                        <h2>{filterStatus === 'all' ? 'All' : filterStatus.charAt(0).toUpperCase() + filterStatus.slice(1)} Reviews ({filteredReviews.length})</h2>
                     </div>
 
-                    <div className="reviews-list">
-                        {filteredReviews.length > 0 ? (
-                            filteredReviews.map(review => (
-                                <div key={review.id} className="review-card">
-                                    <div className="review-header">
-                                        <div className="reviewer-info">
-                                            <div className="user-avatar">
-                                                {review.userName.split(' ').map(n => n[0]).join('')}
-                                            </div>
-                                            <div className="reviewer-details">
-                                                <h4>{review.userName}</h4>
-                                                <span className="review-course">Course ID: {review.courseId}</span>
-                                            </div>
-                                        </div>
-                                        <div className="review-rating">
-                                            {[...Array(5)].map((_, i) => (
-                                                <Star
-                                                    key={i}
-                                                    size={16}
-                                                    fill={i < review.rating ? '#eab308' : 'none'}
-                                                    color="#eab308"
-                                                />
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                    <p className="review-text">{review.comment}</p>
-
-                                    <div className="review-footer">
-                                        <div>
-                                            <span className="review-date">{review.createdAt}</span>
-                                            <span className={`status-badge ${review.status}`}>{review.status}</span>
-                                        </div>
-
-                                        {review.status === 'pending' && (
-                                            <div className="review-actions">
-                                                <button
-                                                    className="btn btn-sm btn-primary"
-                                                    onClick={() => handleApprove(review.id)}
-                                                >
-                                                    <Check size={16} />
-                                                    Approve
-                                                </button>
-                                                <button
-                                                    className="btn btn-sm btn-secondary"
-                                                    onClick={() => handleReject(review.id)}
-                                                >
-                                                    <X size={16} />
-                                                    Reject
-                                                </button>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <div className="empty-state">
-                                <MessageSquare size={48} />
-                                <h3>No reviews found</h3>
-                                <p>There are no reviews matching your filter.</p>
-                            </div>
-                        )}
-                    </div>
-                </section>
+                    {filteredReviews.length > 0 ? (
+                        <div className="table-container">
+                            <table className="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Course</th>
+                                        <th>Rating</th>
+                                        <th>Review</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filteredReviews.map(review => (
+                                        <tr key={review.id}>
+                                            <td>
+                                                <div className="user-cell">
+                                                    <div className="user-avatar-sm">
+                                                        <User size={14} />
+                                                    </div>
+                                                    <span>{review.user}</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span style={{ fontSize: '0.9rem' }}>{review.courseName}</span>
+                                            </td>
+                                            <td>
+                                                <div className="rating">
+                                                    <Star size={14} fill="#eab308" color="#eab308" />
+                                                    <span>{review.rating}</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <p style={{ maxWidth: '300px', margin: 0, fontSize: '0.9rem' }}>{review.comment}</p>
+                                            </td>
+                                            <td>
+                                                <span className={`badge ${review.status === 'approved' ? 'badge-success' : 'badge-warning'}`}>
+                                                    {review.status}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div className="action-buttons">
+                                                    {review.status === 'pending' && (
+                                                        <>
+                                                            <button
+                                                                className="btn-icon text-success"
+                                                                title="Approve"
+                                                                onClick={() => handleApproveReview(review.id)}
+                                                            >
+                                                                <CheckCircle size={18} />
+                                                            </button>
+                                                            <button
+                                                                className="btn-icon text-error"
+                                                                title="Reject"
+                                                                onClick={() => handleRejectReview(review.id)}
+                                                            >
+                                                                <XCircle size={18} />
+                                                            </button>
+                                                        </>
+                                                    )}
+                                                    {review.status === 'approved' && (
+                                                        <button
+                                                            className="btn-icon text-error"
+                                                            title="Remove"
+                                                            onClick={() => handleRejectReview(review.id)}
+                                                        >
+                                                            <XCircle size={18} />
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    ) : (
+                        <div className="empty-state">
+                            <MessageSquare size={48} className="text-primary" />
+                            <h3>No Reviews Found</h3>
+                            <p>No reviews match your current filters.</p>
+                        </div>
+                    )}
+                </div>
             </main>
         </div>
     );
 };
 
 export default AdminReviews;
-

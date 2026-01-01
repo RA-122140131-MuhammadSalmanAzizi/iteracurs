@@ -30,9 +30,7 @@ import DosenUploadCourse from './pages/dosen/DosenUploadCourse';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminCourses from './pages/admin/AdminCourses';
 import AdminUsers from './pages/admin/AdminUsers';
-import AdminCourseApproval from './pages/admin/AdminCourseApproval';
-import AdminNotifications from './pages/admin/AdminNotifications';
-import AdminCMS from './pages/admin/AdminCMS';
+import AdminReviews from './pages/admin/AdminReviews';
 import AdminCourseSettings from './pages/admin/AdminCourseSettings';
 import AdminAnalytics from './pages/admin/AdminAnalytics';
 import AdminData from './pages/admin/AdminData';
@@ -268,19 +266,9 @@ function App() {
                 <AdminCourses />
               </ProtectedRoute>
             } />
-            <Route path="/admin/approvals" element={
+            <Route path="/admin/reviews" element={
               <ProtectedRoute allowedRoles={['admin']}>
-                <AdminCourseApproval />
-              </ProtectedRoute>
-            } />
-            <Route path="/admin/broadcasts" element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <AdminNotifications />
-              </ProtectedRoute>
-            } />
-            <Route path="/admin/cms" element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <AdminCMS />
+                <AdminReviews />
               </ProtectedRoute>
             } />
             <Route path="/admin/users" element={
