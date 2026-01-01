@@ -32,7 +32,6 @@ import AdminCourses from './pages/admin/AdminCourses';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminReviews from './pages/admin/AdminReviews';
 import AdminCourseSettings from './pages/admin/AdminCourseSettings';
-import AdminAnalytics from './pages/admin/AdminAnalytics';
 import AdminData from './pages/admin/AdminData';
 
 // Context
@@ -279,11 +278,6 @@ function App() {
             <Route path="/admin/settings" element={
               <ProtectedRoute allowedRoles={['admin']}>
                 <AdminCourseSettings />
-              </ProtectedRoute>
-            } />
-            <Route path="/admin/analytics" element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <AdminAnalytics />
               </ProtectedRoute>
             } />
             <Route path="/admin/data" element={

@@ -2,12 +2,11 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
     Users, TrendingUp, DollarSign, BookOpen, MessageSquare, Award, Settings, X, PlusCircle,
-    Star, User, Database, BarChart2
+    Star, User, Database
 } from 'lucide-react';
 import { useAuth } from '../../App';
 import { stats } from '../../data/courses';
 import AdminSidebar from '../../components/AdminSidebar';
-import NotificationBell from '../../components/NotificationBell';
 import './AdminPages.css';
 
 const AdminDashboard = () => {
@@ -15,7 +14,6 @@ const AdminDashboard = () => {
     const [isEditingActions, setIsEditingActions] = useState(false);
     const [activeActions, setActiveActions] = useState([
         { id: 'data', label: 'Data Management', path: '/admin/data', icon: Database, visible: true },
-        { id: 'analytics', label: 'Analytics', path: '/admin/analytics', icon: BarChart2, visible: true },
         { id: 'reviews', label: 'Reviews', path: '/admin/reviews', icon: Star, visible: true },
         { id: 'settings', label: 'Course Settings', path: '/admin/settings', icon: Settings, visible: true },
         { id: 'profile', label: 'My Profile', path: '/profile', icon: User, visible: false }
@@ -60,7 +58,6 @@ const AdminDashboard = () => {
                         <p>Welcome back, {user?.name}!</p>
                     </div>
                     <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        <NotificationBell />
                         <span className="date-display">
                             {new Date().toLocaleDateString('en-US', {
                                 weekday: 'long',

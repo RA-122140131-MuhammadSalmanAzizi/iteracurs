@@ -5,7 +5,6 @@ import {
 import { useAuth } from '../../App';
 import { courses } from '../../data/courses';
 import CustomerSidebar from '../../components/CustomerSidebar';
-import NotificationBell from '../../components/NotificationBell';
 import '../admin/AdminPages.css';
 
 const CustomerDashboard = () => {
@@ -41,7 +40,6 @@ const CustomerDashboard = () => {
                         <p>Welcome back, {user?.name}!</p>
                     </div>
                     <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        <NotificationBell />
                         <span className="date-display">
                             {new Date().toLocaleDateString('en-US', {
                                 weekday: 'long',

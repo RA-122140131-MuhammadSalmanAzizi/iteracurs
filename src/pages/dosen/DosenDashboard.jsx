@@ -5,7 +5,6 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../App';
 import DosenSidebar from '../../components/DosenSidebar';
-import NotificationBell from '../../components/NotificationBell';
 import './DosenPages.css';
 
 const DosenDashboard = () => {
@@ -35,7 +34,6 @@ const DosenDashboard = () => {
                         <p>Manage your courses and track your performance</p>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        <NotificationBell />
                         <Link to="/dosen/upload" className="btn btn-primary">
                             <Plus size={18} />
                             Create Course

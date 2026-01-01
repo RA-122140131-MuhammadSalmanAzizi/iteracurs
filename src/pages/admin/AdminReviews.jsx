@@ -18,11 +18,15 @@ const AdminReviews = () => {
 
     const [reviewsList, setReviewsList] = useState(allReviews);
 
-    // Filter reviews
+    // Filter reviews - use userName instead of user
     const filteredReviews = reviewsList.filter(r => {
-        const matchSearch = r.user.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            r.courseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            r.comment.toLowerCase().includes(searchTerm.toLowerCase());
+        const userName = r.userName || '';
+        const courseName = r.courseName || '';
+        const comment = r.comment || '';
+
+        const matchSearch = userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            courseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            comment.toLowerCase().includes(searchTerm.toLowerCase());
         const matchStatus = filterStatus === 'all' || r.status === filterStatus;
         return matchSearch && matchStatus;
     });
@@ -127,7 +131,7 @@ const AdminReviews = () => {
                                                     <div className="user-avatar-sm">
                                                         <User size={14} />
                                                     </div>
-                                                    <span>{review.user}</span>
+                                                    <span>{review.userName}</span>
                                                 </div>
                                             </td>
                                             <td>

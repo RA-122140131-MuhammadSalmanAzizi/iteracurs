@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import {
-    BookOpen, Users, Search, Eye, Trash2, User, Star, Edit, X
+    BookOpen, Users, Search, Eye, Trash2, User, Star, Edit, X,
+    GraduationCap, Award, ShoppingCart, Briefcase
 } from 'lucide-react';
 import AdminSidebar from '../../components/AdminSidebar';
 import { courses as coursesData, categories } from '../../data/courses';
@@ -29,14 +30,41 @@ const AdminData = () => {
     // Courses state
     const [coursesList, setCoursesList] = useState(coursesData);
 
-    // Mock Users data
+    // Mock Users data with role-specific details
     const [usersList, setUsersList] = useState([
-        { id: 1, name: 'John Customer', email: 'john@demo.com', role: 'customer', joinedDate: '2024-01-05', status: 'active' },
-        { id: 2, name: 'Jane Learner', email: 'jane@demo.com', role: 'customer', joinedDate: '2024-01-10', status: 'active' },
-        { id: 3, name: 'Dr. Ahmad Lecturer', email: 'ahmad@demo.com', role: 'dosen', joinedDate: '2023-06-15', status: 'active' },
-        { id: 4, name: 'Sarah Instructor', email: 'sarah@demo.com', role: 'dosen', joinedDate: '2023-08-20', status: 'active' },
-        { id: 5, name: 'Mike Student', email: 'mike@demo.com', role: 'customer', joinedDate: '2024-02-01', status: 'inactive' },
-        { id: 6, name: 'Admin User', email: 'admin@demo.com', role: 'admin', joinedDate: '2023-01-01', status: 'active' },
+        {
+            id: 1, name: 'John Customer', email: 'john@demo.com', role: 'customer',
+            joinedDate: '2024-01-05', status: 'active', phone: '081234567890',
+            // Customer specific
+            enrolledCourses: 3, completedCourses: 1, certificates: 1, totalSpent: 750000
+        },
+        {
+            id: 2, name: 'Jane Learner', email: 'jane@demo.com', role: 'customer',
+            joinedDate: '2024-01-10', status: 'active', phone: '081234567891',
+            enrolledCourses: 5, completedCourses: 3, certificates: 3, totalSpent: 1500000
+        },
+        {
+            id: 3, name: 'Dr. Ahmad Lecturer', email: 'ahmad@demo.com', role: 'dosen',
+            joinedDate: '2023-06-15', status: 'active', phone: '081234567892',
+            // Instructor specific
+            coursesCreated: 5, totalStudents: 1250, totalRevenue: 45000000, rating: 4.8
+        },
+        {
+            id: 4, name: 'Sarah Instructor', email: 'sarah@demo.com', role: 'dosen',
+            joinedDate: '2023-08-20', status: 'active', phone: '081234567893',
+            coursesCreated: 3, totalStudents: 890, totalRevenue: 28000000, rating: 4.6
+        },
+        {
+            id: 5, name: 'Mike Student', email: 'mike@demo.com', role: 'customer',
+            joinedDate: '2024-02-01', status: 'inactive', phone: '081234567894',
+            enrolledCourses: 1, completedCourses: 0, certificates: 0, totalSpent: 0
+        },
+        {
+            id: 6, name: 'Admin User', email: 'admin@demo.com', role: 'admin',
+            joinedDate: '2023-01-01', status: 'active', phone: '081234567895',
+            // Admin specific
+            lastLogin: '2024-01-15 09:30', actionsToday: 25
+        },
     ]);
 
     // Get unique categories from courses
@@ -69,6 +97,15 @@ const AdminData = () => {
             customer: 'badge-secondary'
         };
         return badges[role] || 'badge-secondary';
+    };
+
+    const getRoleLabel = (role) => {
+        const labels = {
+            admin: 'Administrator',
+            dosen: 'Instructor',
+            customer: 'Customer'
+        };
+        return labels[role] || role;
     };
 
     const handleViewCourse = (course) => {
@@ -134,6 +171,130 @@ const AdminData = () => {
         setSelectedItem(null);
         setEditForm({});
         setModalMode('view');
+    };
+
+    // Render user detail based on role
+    const renderUserDetails = (user) => {
+        return (
+            <div className="modal-body">
+                <div className="user-avatar-lg" style={{ margin: '0 auto 1rem', width: '80px', height: '80px', fontSize: '2rem' }}>
+                    <User size={40} />
+                </div>
+                <h2 style={{ textAlign: 'center' }}>{user.name}</h2>
+                <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>{user.email}</p>
+                <p style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                    <span className={`badge ${getRoleBadge(user.role)}`}>{getRoleLabel(user.role)}</span>
+                </p>
+
+                <div className="user-detail-grid">
+                    {/* Common Info */}
+                    <div className="detail-section">
+                        <h4>Basic Information</h4>
+                        <div className="detail-row">
+                            <span className="detail-label">Phone</span>
+                            <span className="detail-value">{user.phone || '-'}</span>
+                        </div>
+                        <div className="detail-row">
+                            <span className="detail-label">Joined</span>
+                            <span className="detail-value">{user.joinedDate}</span>
+                        </div>
+                        <div className="detail-row">
+                            <span className="detail-label">Status</span>
+                            <span className={`badge ${user.status === 'active' ? 'badge-success' : 'badge-secondary'}`}>{user.status}</span>
+                        </div>
+                    </div>
+
+                    {/* Customer Specific */}
+                    {user.role === 'customer' && (
+                        <div className="detail-section">
+                            <h4>Learning Progress</h4>
+                            <div className="detail-stats">
+                                <div className="detail-stat">
+                                    <GraduationCap size={20} />
+                                    <div>
+                                        <span className="stat-number">{user.enrolledCourses}</span>
+                                        <span className="stat-label">Enrolled</span>
+                                    </div>
+                                </div>
+                                <div className="detail-stat">
+                                    <BookOpen size={20} />
+                                    <div>
+                                        <span className="stat-number">{user.completedCourses}</span>
+                                        <span className="stat-label">Completed</span>
+                                    </div>
+                                </div>
+                                <div className="detail-stat">
+                                    <Award size={20} />
+                                    <div>
+                                        <span className="stat-number">{user.certificates}</span>
+                                        <span className="stat-label">Certificates</span>
+                                    </div>
+                                </div>
+                                <div className="detail-stat">
+                                    <ShoppingCart size={20} />
+                                    <div>
+                                        <span className="stat-number">Rp {(user.totalSpent || 0).toLocaleString('id-ID')}</span>
+                                        <span className="stat-label">Total Spent</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Instructor Specific */}
+                    {user.role === 'dosen' && (
+                        <div className="detail-section">
+                            <h4>Instructor Performance</h4>
+                            <div className="detail-stats">
+                                <div className="detail-stat">
+                                    <BookOpen size={20} />
+                                    <div>
+                                        <span className="stat-number">{user.coursesCreated}</span>
+                                        <span className="stat-label">Courses</span>
+                                    </div>
+                                </div>
+                                <div className="detail-stat">
+                                    <Users size={20} />
+                                    <div>
+                                        <span className="stat-number">{(user.totalStudents || 0).toLocaleString()}</span>
+                                        <span className="stat-label">Students</span>
+                                    </div>
+                                </div>
+                                <div className="detail-stat">
+                                    <Star size={20} />
+                                    <div>
+                                        <span className="stat-number">{user.rating}</span>
+                                        <span className="stat-label">Rating</span>
+                                    </div>
+                                </div>
+                                <div className="detail-stat">
+                                    <Briefcase size={20} />
+                                    <div>
+                                        <span className="stat-number">Rp {((user.totalRevenue || 0) / 1000000).toFixed(1)}M</span>
+                                        <span className="stat-label">Revenue</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Admin Specific */}
+                    {user.role === 'admin' && (
+                        <div className="detail-section">
+                            <h4>Admin Activity</h4>
+                            <div className="detail-row">
+                                <span className="detail-label">Last Login</span>
+                                <span className="detail-value">{user.lastLogin || '-'}</span>
+                            </div>
+                            <div className="detail-row">
+                                <span className="detail-label">Actions Today</span>
+                                <span className="detail-value">{user.actionsToday || 0}</span>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
     };
 
     return (
@@ -347,7 +508,7 @@ const AdminData = () => {
                                                 <td>{user.email}</td>
                                                 <td>
                                                     <span className={`badge ${getRoleBadge(user.role)}`}>
-                                                        {user.role}
+                                                        {getRoleLabel(user.role)}
                                                     </span>
                                                 </td>
                                                 <td>{user.joinedDate}</td>
@@ -405,7 +566,7 @@ const AdminData = () => {
                 {/* Detail/Edit Modal */}
                 {showModal && selectedItem && (
                     <div className="modal-overlay" onClick={closeModal}>
-                        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-content modal-lg" onClick={(e) => e.stopPropagation()}>
                             <button className="modal-close" onClick={closeModal}><X size={20} /></button>
 
                             {modalMode === 'view' && selectedItem.type === 'course' && (
@@ -424,20 +585,7 @@ const AdminData = () => {
                                 </div>
                             )}
 
-                            {modalMode === 'view' && selectedItem.type === 'user' && (
-                                <div className="modal-body">
-                                    <div className="user-avatar-lg" style={{ margin: '0 auto 1rem', width: '80px', height: '80px', fontSize: '2rem' }}>
-                                        <User size={40} />
-                                    </div>
-                                    <h2 style={{ textAlign: 'center' }}>{selectedItem.data.name}</h2>
-                                    <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>{selectedItem.data.email}</p>
-                                    <div className="modal-details">
-                                        <p><strong>Role:</strong> <span className={`badge ${getRoleBadge(selectedItem.data.role)}`}>{selectedItem.data.role}</span></p>
-                                        <p><strong>Joined:</strong> {selectedItem.data.joinedDate}</p>
-                                        <p><strong>Status:</strong> <span className={`badge ${selectedItem.data.status === 'active' ? 'badge-success' : 'badge-secondary'}`}>{selectedItem.data.status}</span></p>
-                                    </div>
-                                </div>
-                            )}
+                            {modalMode === 'view' && selectedItem.type === 'user' && renderUserDetails(selectedItem.data)}
 
                             {modalMode === 'edit' && selectedItem.type === 'course' && (
                                 <div className="modal-body">
@@ -507,6 +655,15 @@ const AdminData = () => {
                                             className="input"
                                             value={editForm.email || ''}
                                             onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Phone</label>
+                                        <input
+                                            type="text"
+                                            className="input"
+                                            value={editForm.phone || ''}
+                                            onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
                                         />
                                     </div>
                                     <div className="form-group">
