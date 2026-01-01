@@ -23,13 +23,13 @@ const iconMap = {
     MoreHorizontal: MoreHorizontal
 };
 
-// Top instructors data
+// Top instructors data - use BASE_URL for GitHub Pages compatibility
 const topInstructors = [
-    { id: 1, name: 'Dr. Ans Lecturer', title: 'Web Development Expert', avatar: '/dosen1.png' },
-    { id: 2, name: 'Prof. Habs Webdev', title: 'Data Science Specialist', avatar: '/dosen2.png' },
-    { id: 3, name: 'Mrs. W Design', title: 'UI/UX Designer', avatar: '/dosen3.png' },
-    { id: 4, name: 'Dr. Alex AI', title: 'Machine Learning Expert', avatar: '/dosen4.png' },
-    { id: 5, name: 'James Backend', title: 'Backend Specialist', avatar: '/dosen5.png' },
+    { id: 1, name: 'Dr. Ans Lecturer', title: 'Web Development Expert', avatar: `${import.meta.env.BASE_URL}dosen1.png` },
+    { id: 2, name: 'Prof. Habs Webdev', title: 'Data Science Specialist', avatar: `${import.meta.env.BASE_URL}dosen2.png` },
+    { id: 3, name: 'Mrs. W Design', title: 'UI/UX Designer', avatar: `${import.meta.env.BASE_URL}dosen3.png` },
+    { id: 4, name: 'Dr. Alex AI', title: 'Machine Learning Expert', avatar: `${import.meta.env.BASE_URL}dosen4.png` },
+    { id: 5, name: 'James Backend', title: 'Backend Specialist', avatar: `${import.meta.env.BASE_URL}dosen5.png` },
 ];
 
 // Reviews data
