@@ -44,7 +44,18 @@ const Navbar = () => {
                 <div className={`navbar-menu ${isMenuOpen ? 'active' : ''}`}>
                     <Link to="/courses" className="nav-link">Courses</Link>
                     {isHomePage && (
-                        <a href="#why-section" className="nav-link">Why Us</a>
+                        <button
+                            className="nav-link"
+                            onClick={() => {
+                                const section = document.getElementById('why-section');
+                                if (section) {
+                                    section.scrollIntoView({ behavior: 'smooth' });
+                                }
+                            }}
+                            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+                        >
+                            Why Us
+                        </button>
                     )}
                 </div>
 
