@@ -4,7 +4,7 @@ import {
     Menu, X, BookOpen, Award, User, LogOut,
     ChevronDown, ArrowLeft, Sun, Moon
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -14,8 +14,45 @@ const Navbar = () => {
     const location = useLocation();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [showThemeToast, setShowThemeToast] = useState(false);
 
     const isHomePage = location.pathname === '/';
+
+    // Show theme toast on first visit to homepage
+    useEffect(() => {
+        if (isHomePage) {
+            const hasSeenToast = localStorage.getItem('hasSeenThemeToast');
+            if (!hasSeenToast) {
+                // Show toast after a short delay
+                const timer = setTimeout(() => {
+                    setShowThemeToast(true);
+                }, 2000);
+                return () => clearTimeout(timer);
+            }
+        }
+    }, [isHomePage]);
+
+    // Auto-dismiss toast after 8 seconds
+    useEffect(() => {
+        if (showThemeToast) {
+            const timer = setTimeout(() => {
+                dismissThemeToast();
+            }, 8000);
+            return () => clearTimeout(timer);
+        }
+    }, [showThemeToast]);
+
+    const dismissThemeToast = () => {
+        setShowThemeToast(false);
+        localStorage.setItem('hasSeenThemeToast', 'true');
+    };
+
+    const handleThemeToggle = () => {
+        toggleTheme();
+        if (showThemeToast) {
+            dismissThemeToast();
+        }
+    };
 
     const handleLogout = () => {
         logout();
@@ -60,15 +97,31 @@ const Navbar = () => {
                 </div>
 
                 <div className="navbar-actions">
-                    {/* Theme Toggle Button */}
-                    <button
-                        className="theme-toggle-btn"
-                        onClick={toggleTheme}
-                        aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-                        style={{ marginRight: user ? '0.5rem' : '0' }}
-                    >
-                        {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-                    </button>
+                    {/* Theme Toggle Button with Toast */}
+                    <div className="theme-toggle-wrapper">
+                        <button
+                            className="theme-toggle-btn"
+                            onClick={handleThemeToggle}
+                            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+                            style={{ marginRight: user ? '0.5rem' : '0' }}
+                        >
+                            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                        </button>
+
+                        {/* Theme Toast Notification */}
+                        {showThemeToast && (
+                            <div className="theme-toast">
+                                <div className="theme-toast-content">
+                                    <span className="theme-toast-icon">
+                                        {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                                    </span>
+                                    <p>Klik tombol ini untuk beralih ke mode {theme === 'dark' ? 'terang' : 'gelap'}!</p>
+                                </div>
+                                <button className="theme-toast-close" onClick={dismissThemeToast}>×</button>
+                                <div className="theme-toast-arrow"></div>
+                            </div>
+                        )}
+                    </div>
 
                     {user ? (
                         <>
