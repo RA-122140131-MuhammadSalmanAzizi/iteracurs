@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
-    Play, Star, Users, BookOpen, Award, ArrowRight, ArrowUp,
+    Play, Star, Users, BookOpen, Award, ArrowRight, ArrowUp, ArrowDown,
     CheckCircle, TrendingUp, Clock, Search, XCircle, Youtube,
     Globe, Code, Palette, BarChart2, Megaphone, Briefcase, MoreHorizontal, GraduationCap,
     UserPlus, ClipboardCheck, PlayCircle, User, CreditCard
@@ -41,6 +41,29 @@ const testimonials = [
     { id: 5, text: 'Materi relevan dengan perkembangan teknologi terkini dan disertai perspektif etika.', rating: 5 },
 ];
 
+const CountUp = ({ end, duration = 1500, formatter = (val) => val }) => {
+    const [count, setCount] = useState(0);
+
+    useEffect(() => {
+        let startTime = null;
+        const animate = (currentTime) => {
+            if (!startTime) startTime = currentTime;
+            const progress = Math.min((currentTime - startTime) / duration, 1);
+            // Ease out quart
+            const easeProgress = 1 - Math.pow(1 - progress, 4);
+
+            setCount(Math.floor(easeProgress * end));
+
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            }
+        };
+        requestAnimationFrame(animate);
+    }, [end, duration]);
+
+    return <span className="stat-digit">{formatter(count)}</span>;
+};
+
 const HomePage = () => {
     const { certificates } = useAuth();
     const [certificateId, setCertificateId] = useState('');
@@ -59,6 +82,13 @@ const HomePage = () => {
 
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const scrollToExplore = () => {
+        const exploreSection = document.getElementById('explore');
+        if (exploreSection) {
+            exploreSection.scrollIntoView({ behavior: 'smooth' });
+        }
     };
 
     const formatNumber = (num) => {
@@ -110,7 +140,8 @@ const HomePage = () => {
 
             {/* Hero Section */}
             <section className="hero">
-
+                <div className="hero-bg" style={{ backgroundImage: `url(${import.meta.env.BASE_URL}hero-bg.png)` }}></div>
+                <div className="hero-overlay"></div>
 
                 <div className="hero-container">
                     <div className="hero-content">
@@ -130,8 +161,8 @@ const HomePage = () => {
                                 Explore Courses
                                 <ArrowRight size={20} />
                             </Link>
-                            <Link to="/register" className="btn btn-secondary btn-lg">
-                                Start Free Trial
+                            <Link to="/register" className="btn btn-white btn-lg">
+                                Register Now
                             </Link>
                         </div>
 
@@ -141,7 +172,9 @@ const HomePage = () => {
                                     <Users size={20} />
                                 </div>
                                 <div>
-                                    <p className="stat-value">{formatNumber(stats.totalStudents)}+</p>
+                                    <p className="stat-value">
+                                        <CountUp end={stats.totalStudents} formatter={formatNumber} />+
+                                    </p>
                                     <p className="stat-label">Students</p>
                                 </div>
                             </div>
@@ -151,7 +184,9 @@ const HomePage = () => {
                                     <BookOpen size={20} />
                                 </div>
                                 <div>
-                                    <p className="stat-value">{stats.totalCourses}+</p>
+                                    <p className="stat-value">
+                                        <CountUp end={stats.totalCourses} formatter={formatNumber} />+
+                                    </p>
                                     <p className="stat-label">Courses</p>
                                 </div>
                             </div>
@@ -161,7 +196,9 @@ const HomePage = () => {
                                     <Award size={20} />
                                 </div>
                                 <div>
-                                    <p className="stat-value">{formatNumber(stats.totalCertificates)}+</p>
+                                    <p className="stat-value">
+                                        <CountUp end={stats.totalCertificates} formatter={formatNumber} />+
+                                    </p>
                                     <p className="stat-label">Certificates</p>
                                 </div>
                             </div>
@@ -251,7 +288,7 @@ const HomePage = () => {
             </section>
 
             {/* Categories Carousel Section */}
-            <section className="categories-section">
+            <section className="categories-section" id="explore">
                 <div className="container">
                     <div className="section-header text-center">
                         <h2>Explore Categories</h2>
@@ -511,6 +548,15 @@ const HomePage = () => {
                 aria-label="Scroll to top"
             >
                 <ArrowUp size={24} />
+            </button>
+
+            {/* Scroll Down Button */}
+            <button
+                className={`scroll-down ${!showScrollTop ? 'visible' : ''}`}
+                onClick={scrollToExplore}
+                aria-label="Scroll down"
+            >
+                <ArrowDown size={24} />
             </button>
         </div>
     );
