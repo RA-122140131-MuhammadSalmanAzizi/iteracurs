@@ -1,197 +1,146 @@
-@startuml Class Diagram - LearnHub E-Learning Platform
+@startuml Class Diagram
 
-skinparam backgroundColor #FEFEFE
-skinparam classBackgroundColor #E3F2FD
-skinparam classBorderColor #1976D2
-skinparam stereotypeCBackgroundColor #BBDEFB
+skinparam classAttributeIconSize 0
 
-title Class Diagram: LearnHub E-Learning Platform
+' Domain Entities with Behavior
 
-' ========== USER CLASSES ==========
-abstract class User {
-    - id: number
-    - email: string
-    - password: string
-    - name: string
-    - avatar: string
-    - role: UserRole
-    --
-    + login(email, password): AuthResult
-    + logout(): void
-    + updateProfile(): void
+class User {
+  -email: String
+  -password: String
+  -name: String
+  -role: UserRole
+  -status: UserStatus
+  -avatar: String
+  --
+  +login(password: String): boolean
+  +updateProfile(data: Map): void
+  +hasRole(role: UserRole): boolean
+  +canAccessCourse(course: Course): boolean
 }
 
-enum UserRole {
-    CUSTOMER
-    DOSEN
-    ADMIN
+class Customer extends User {
+  -enrolledCourses: List<Course>
+  -wishlist: List<Course>
+  --
+  +enroll(course: Course): void
+  +completeCourse(course: Course): Certificate
+  +writeReview(course: Course, rating: int, comment: String): void
 }
 
-class Customer {
-    - enrolledCourses: Course[]
-    - completedCourses: Course[]
-    - certificates: Certificate[]
-    --
-    + enrollCourse(courseId): void
-    + watchCourse(courseId): void
-    + completeCourse(courseId): void
-    + claimCertificate(courseId): Certificate
-    + submitReview(courseId, review): Review
+class Instructor extends User {
+  -uploadedCourses: List<Course>
+  --
+  +createCourse(data: CourseData): Course
+  +updateContent(course: Course, content: Content): void
+  +viewStudentProgress(course: Course): List<StudentProgress>
 }
 
-class Dosen {
-    - courses: Course[]
-    - totalStudents: number
-    - averageRating: number
-    --
-    + uploadCourse(course): Course
-    + editCourse(courseId): void
-    + viewStatistics(): Stats
+class Admin extends User {
+  --
+  +approveReview(review: Review): void
+  +manageUser(user: User): void
+  +updateSystemSettings(settings: SystemSettings): void
 }
 
-class Admin {
-    --
-    + manageUsers(): void
-    + manageCourses(): void
-    + approveReview(reviewId): void
-    + rejectReview(reviewId): void
-    + manageCertificates(): void
-    + viewDashboard(): DashboardStats
-}
-
-' ========== COURSE CLASSES ==========
 class Course {
-    - id: number
-    - title: string
-    - description: string
-    - instructor: string
-    - instructorAvatar: string
-    - category: string
-    - level: Level
-    - duration: string
-    - lessons: number
-    - students: number
-    - rating: number
-    - reviews: number
-    - price: number
-    - isFree: boolean
-    - thumbnail: string
-    - tags: string[]
-    - lastUpdated: string
-    - chapters: Chapter[]
-    --
-    + getDetails(): CourseDetail
-    + getTotalLessons(): number
-}
-
-enum Level {
-    BEGINNER
-    INTERMEDIATE
-    ADVANCED
-    ALL_LEVELS
+  -title: String
+  -description: String
+  -price: Money
+  -isFree: boolean
+  -status: CourseStatus
+  -category: Category
+  -level: Level
+  -chapters: List<Chapter>
+  --
+  +publish(): void
+  +calculateDuration(): Duration
+  +getAverageRating(): float
+  +addReview(review: Review): void
+  +generateCertificate(student: Customer): Certificate
 }
 
 class Chapter {
-    - title: string
-    - lessons: Lesson[]
-    --
-    + getLessonCount(): number
+  -title: String
+  -contents: List<Content>
+  --
+  +addContent(content: Content): void
+  +reorderContent(): void
+  +getProgress(): float
 }
 
-class Lesson {
-    - id: number
-    - title: string
-    - duration: string
-    - completed: boolean
-    --
-    + markComplete(): void
+abstract class Content {
+  -title: String
+  -isRequired: boolean
+  --
+  +markComplete(user: User): void
+  {abstract} +render(): Component
 }
 
-class Category {
-    - id: number
-    - name: string
-    - icon: string
-    - count: number
+class VideoContent extends Content {
+  -url: String
+  -duration: Duration
+  --
+  +play(): void
 }
 
-' ========== REVIEW & CERTIFICATE ==========
+class QuizContent extends Content {
+  -questions: List<Question>
+  -passingScore: int
+  --
+  +submitAttempts(answers: Map): QuizResult
+}
+
 class Review {
-    - id: number
-    - courseId: number
-    - userId: number
-    - userName: string
-    - rating: number
-    - comment: string
-    - status: ReviewStatus
-    - createdAt: string
-    --
-    + approve(): void
-    + reject(): void
-}
-
-enum ReviewStatus {
-    PENDING
-    APPROVED
-    REJECTED
+  -author: User
+  -rating: int
+  -comment: String
+  -status: ReviewStatus
+  --
+  +approve(): void
+  +reject(): void
 }
 
 class Certificate {
-    - id: string
-    - courseId: number
-    - courseName: string
-    - issuedDate: string
-    - userName: string
-    --
-    + verify(certId): boolean
-    + generateId(): string
+  -code: String
+  -recipient: Customer
+  -course: Course
+  -issueDate: Date
+  --
+  +downloadPDF(): File
+  +verify(): boolean
 }
 
-' ========== CONTEXT/STATE ==========
+' Services / Contexts (Logic Containers)
+
 class AuthContext {
-    - user: User
-    - enrolledCourses: number[]
-    - completedCourses: number[]
-    - certificates: Certificate[]
-    --
-    + login(email, password): AuthResult
-    + logout(): void
-    + register(name, email, password): AuthResult
-    + enrollCourse(courseId): void
-    + completeCourse(courseId): void
-    + claimCertificate(courseId, name): string
+  -currentUser: User
+  --
+  +login(credentials): User
+  +logout(): void
 }
 
-class ThemeContext {
-    - theme: Theme
-    --
-    + toggleTheme(): void
+class CourseService {
+  --
+  +search(query: String): List<Course>
+  +getRecommendations(user: User): List<Course>
 }
 
-enum Theme {
-    DARK
-    LIGHT
-}
+' Relationships
 
-' ========== RELATIONSHIPS ==========
 User <|-- Customer
-User <|-- Dosen
+User <|-- Instructor
 User <|-- Admin
-User --> UserRole
 
-Course --> Level
-Course "1" *-- "many" Chapter
-Chapter "1" *-- "many" Lesson
-Course --> Category
+Course "1" *-- "*" Chapter
+Chapter "1" *-- "*" Content
+Content <|-- VideoContent
+Content <|-- QuizContent
 
-Customer "many" -- "many" Course : enrolls
-Dosen "1" -- "many" Course : creates
-Customer "1" -- "many" Certificate : owns
-Customer "1" -- "many" Review : writes
-Course "1" -- "many" Review : has
+Customer "1" --> "*" Course : enrolls
+Customer "1" --> "*" Certificate : earns
+Course "1" --> "*" Review : has
+Review "*" --> "1" User : authored by
 
-Review --> ReviewStatus
-AuthContext --> User
-AuthContext --> Certificate
-ThemeContext --> Theme
+Instructor "1" --> "*" Course : teaches
 
 @enduml

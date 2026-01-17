@@ -1,0 +1,53 @@
+@startuml Activity Diagram - Learning Process
+title Activity: Learning Process (Video & Quiz)
+
+skinparam backgroundColor #FEFEFE
+skinparam ActivityBackgroundColor #FFF3E0
+skinparam ActivityBorderColor #EF6C00
+
+|Customer|
+start
+:Open Watch Course Page;
+:View Chapter List;
+
+partition "Consume Content" {
+    :Select Content Item;
+    if (Type is Video?) then (Yes)
+        :Watch Video;
+    elseif (Type is PDF?) then (Yes)
+        :Read PDF Document;
+    elseif (Type is Link?) then (Yes)
+        :Visit External Link;
+    elseif (Type is Quiz?) then (Yes)
+        :Start Quiz/Exercise;
+        repeat
+            :Answer Questions;
+        repeat while (More Questions?)
+        :Submit Answers;
+        
+        |System|
+        :Calculate Score;
+        :Check Passing Score (>= 80);
+        
+        |Customer|
+        if (Passed?) then (Yes)
+            :Show Success Message;
+            :Mark Quiz as Completed;
+        else (No)
+            :Show Failure Message;
+            :Prompt Retry;
+            detach
+        endif
+    endif
+}
+
+|System|
+:Update Progress;
+:Check if All Required Contents Completed;
+
+if (All Completed?) then (Yes)
+    :Unlock Certificate Claim;
+endif
+
+stop
+@enduml

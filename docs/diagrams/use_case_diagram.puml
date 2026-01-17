@@ -1,120 +1,85 @@
-@startuml Use Case Diagram - LearnHub E-Learning Platform
+@startuml Use Case Diagram
 
 left to right direction
 skinparam packageStyle rectangle
-skinparam actorStyle awesome
-skinparam backgroundColor #FEFEFE
 
-' Actors
-actor "Guest" as Guest #LightGray
-actor "Customer\n(Student)" as Customer #LightBlue
-actor "Dosen\n(Instructor)" as Dosen #LightGreen
-actor "Admin" as Admin #LightCoral
+actor "Customer" as customer
+actor "Dosen (Instructor)" as dosen
+actor "Admin" as admin
 
-' System Boundary
-rectangle "LearnHub E-Learning Platform" {
+package "Course Platform" {
     
-    ' === Guest Use Cases ===
-    package "Public Access" {
-        usecase "Browse Courses" as UC1
-        usecase "View Course Detail" as UC2
-        usecase "Search Courses" as UC3
-        usecase "Filter Courses" as UC4
-        usecase "Verify Certificate" as UC5
-        usecase "Register Account" as UC6
-        usecase "Login" as UC7
-        usecase "Toggle Dark/Light Mode" as UC8
+    rectangle "Authentication" {
+        usecase "Login" as UC_Login
+        usecase "Register" as UC_Register
+        usecase "Manage Profile" as UC_Profile
     }
-    
-    ' === Customer Use Cases ===
-    package "Customer Features" {
-        usecase "Enroll in Course" as UC10
-        usecase "Watch Course Video" as UC11
-        usecase "Track Progress" as UC12
-        usecase "Complete Course" as UC13
-        usecase "Claim Certificate" as UC14
-        usecase "View My Certificates" as UC15
-        usecase "Submit Review" as UC16
-        usecase "View Profile" as UC17
-        usecase "Update Profile" as UC18
-        usecase "Logout" as UC19
+
+    rectangle "Course Discovery" {
+        usecase "Browse Courses" as UC_Browse
+        usecase "Search Course" as UC_Search
+        usecase "View Course Detail" as UC_Detail
+        usecase "Manage Wishlist" as UC_Wishlist
     }
-    
-    ' === Dosen Use Cases ===
-    package "Instructor Features" {
-        usecase "View Dashboard" as UC20
-        usecase "View My Courses" as UC21
-        usecase "Upload New Course" as UC22
-        usecase "Edit Course" as UC23
-        usecase "View Course Statistics" as UC24
+
+    rectangle "Learning" {
+        usecase "Enroll in Course" as UC_Enroll
+        usecase "Watch Video/Read PDF" as UC_Watch
+        usecase "Take Quiz" as UC_Quiz
+        usecase "Claim Certificate" as UC_Certificate
+        usecase "Write Review" as UC_Review
     }
-    
-    ' === Admin Use Cases ===
-    package "Admin Features" {
-        usecase "View Admin Dashboard" as UC30
-        usecase "Manage Users" as UC31
-        usecase "Manage All Courses" as UC32
-        usecase "Approve/Reject Reviews" as UC33
-        usecase "Manage Certificates" as UC34
-        usecase "View System Statistics" as UC35
+
+    rectangle "Course Management (Dosen)" {
+        usecase "Upload Course" as UC_Upload
+        usecase "Manage Course Content" as UC_ManageContent
+        usecase "View Student Progress" as UC_ViewStudents
+    }
+
+    rectangle "Admin Management" {
+        usecase "Manage Users (Search/Status)" as UC_ManageUsers
+        usecase "Approve/Reject Reviews" as UC_ApproveReviews
+        
+        package "System Settings" {
+            usecase "Manage Categories" as UC_ManageCategories
+            usecase "Manage Levels" as UC_ManageLevels
+            usecase "Configure Global Settings" as UC_GlobalSettings
+        }
     }
 }
 
-' Guest Connections
-Guest --> UC1
-Guest --> UC2
-Guest --> UC3
-Guest --> UC4
-Guest --> UC5
-Guest --> UC6
-Guest --> UC7
-Guest --> UC8
+' Relationships
+customer --> UC_Login
+customer --> UC_Register
+customer --> UC_Browse
+customer --> UC_Search
+customer --> UC_Detail
+customer --> UC_Enroll
+customer --> UC_Watch
+customer --> UC_Quiz
+customer --> UC_Certificate
+customer --> UC_Review
+customer --> UC_Profile
+customer --> UC_Wishlist
 
-' Customer Connections (inherits Guest)
-Customer --> UC1
-Customer --> UC2
-Customer --> UC3
-Customer --> UC4
-Customer --> UC5
-Customer --> UC8
-Customer --> UC10
-Customer --> UC11
-Customer --> UC12
-Customer --> UC13
-Customer --> UC14
-Customer --> UC15
-Customer --> UC16
-Customer --> UC17
-Customer --> UC18
-Customer --> UC19
+dosen --> UC_Login
+dosen --> UC_Upload
+dosen --> UC_ManageContent
+dosen --> UC_ViewStudents
+dosen --> UC_Profile
 
-' Dosen Connections
-Dosen --> UC8
-Dosen --> UC17
-Dosen --> UC18
-Dosen --> UC19
-Dosen --> UC20
-Dosen --> UC21
-Dosen --> UC22
-Dosen --> UC23
-Dosen --> UC24
+admin --> UC_Login
+admin --> UC_ManageUsers
+admin --> UC_ApproveReviews
+admin --> UC_ManageCategories
+admin --> UC_ManageLevels
+admin --> UC_GlobalSettings
 
-' Admin Connections
-Admin --> UC8
-Admin --> UC17
-Admin --> UC18
-Admin --> UC19
-Admin --> UC30
-Admin --> UC31
-Admin --> UC32
-Admin --> UC33
-Admin --> UC34
-Admin --> UC35
-
-' Include/Extend Relationships
-UC10 ..> UC7 : <<include>>
-UC11 ..> UC10 : <<include>>
-UC14 ..> UC13 : <<include>>
-UC16 ..> UC11 : <<include>>
+' Dependencies
+UC_Enroll ..> UC_Login : <<include>>
+UC_Watch ..> UC_Enroll : <<include>>
+UC_Quiz ..> UC_Watch : <<extends>>
+UC_Certificate ..> UC_Quiz : <<include>> (Pass Quiz)
+UC_ApproveReviews ..> UC_Review : <<include>>
 
 @enduml

@@ -1,0 +1,35 @@
+@startuml Activity Diagram - Dosen Course Upload
+title Activity: Dosen Upload Course
+
+skinparam backgroundColor #FEFEFE
+skinparam ActivityBackgroundColor #E0F7FA
+skinparam ActivityBorderColor #006064
+
+|Dosen (Instructor)|
+start
+:Login as Dosen;
+:Navigate to Dosen Dashboard;
+:Click "Upload New Course";
+:Fill Course Meta (Title, Description, Category, Price);
+:Create Chapters;
+
+repeat
+    :Add Content to Chapter;
+    :Select Type (Video/PDF/Quiz);
+    if (Type == Quiz) then (Yes)
+        :Create Questions & Options;
+        :Set Correct Answers;
+    else (File/Link)
+         :Upload File or Paste URL;
+    endif
+repeat while (More Content?)
+
+:Review Course Structure;
+:Publish Course;
+
+|System|
+:Save Course Data;
+:Make Course Available in Catalog;
+
+stop
+@enduml

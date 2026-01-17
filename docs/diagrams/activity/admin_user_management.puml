@@ -1,0 +1,41 @@
+@startuml Activity Diagram - Admin User Management
+title Activity: Admin User Management
+
+skinparam backgroundColor #FEFEFE
+skinparam ActivityBackgroundColor #F3E5F5
+skinparam ActivityBorderColor #7B1FA2
+
+|Admin|
+start
+:Login as Admin;
+:Navigate to "Users Management";
+
+partition "View & Filter" {
+    :View User List;
+    :Select Role Filter (All/Customer/Dosen/Admin);
+    :Enter Search Query (Name/Email);
+    :System Filters List;
+}
+
+:Select Target User;
+
+if (Action?) then (Edit User)
+    :Click Edit Button;
+    :Open Edit Form (Mock);
+    :Modify User Details;
+    :Save Changes;
+else (Deactivate/Activate)
+    :Click Status Toggle Button;
+    if (Current Status?) then (Active)
+        :Confirm Deactivation;
+        :System Sets Status to 'Inactive';
+    else (Inactive)
+        :Confirm Activation;
+        :System Sets Status to 'Active';
+    endif
+endif
+
+:Update User List UI;
+
+stop
+@enduml

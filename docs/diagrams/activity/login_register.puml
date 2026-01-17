@@ -1,0 +1,44 @@
+@startuml Activity Diagram - Login and Registration
+title Activity: User Login and Registration
+
+skinparam backgroundColor #FEFEFE
+skinparam ActivityBackgroundColor #E8F5E9
+skinparam ActivityBorderColor #388E3C
+skinparam ActivityDiamondBackgroundColor #FFF9C4
+skinparam ActivityDiamondBorderColor #F9A825
+
+|Visitor|
+start
+:Access Application;
+
+if (Has Account?) then (Yes)
+  :Navigate to Login Page;
+  :Enter Email and Password;
+  :Submit Login Form;
+else (No)
+  :Navigate to Register Page;
+  :Enter Name, Email, Password;
+  :Submit Registration Form;
+  :Account Created;
+  :Auto-Login;
+endif
+
+|System|
+:Validate Credentials;
+if (Valid?) then (Yes)
+    :Retrieve User Role;
+    if (Role == Admin?) then (Yes)
+        :Redirect to Admin Dashboard;
+    elseif (Role == Dosen?) then (Yes)
+        :Redirect to Dosen Dashboard;
+    else (Customer)
+        :Redirect to Customer Dashboard;
+    endif
+else (No)
+    :Show Error Message;
+    :Stay on Login Page;
+    detach
+endif
+
+stop
+@enduml

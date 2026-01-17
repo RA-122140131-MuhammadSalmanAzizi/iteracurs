@@ -1,0 +1,57 @@
+@startuml Activity Diagram - Admin Course Settings
+title Activity: Admin Course Settings Management
+
+skinparam backgroundColor #FEFEFE
+skinparam ActivityBackgroundColor #E3F2FD
+skinparam ActivityBorderColor #1565C0
+
+|Admin|
+start
+:Login to Admin Dashboard;
+:Navigate to "Course Settings";
+
+fork
+    partition "Manage Categories" {
+        :View Categories List;
+        if (Action?) then (Add New)
+            :Click "Add Category";
+            :Enter Name;
+            :Save Category;
+        elseif (Edit)
+            :Click Edit Icon;
+            :Update Name;
+            :Save Changes;
+        else (Delete)
+            :Click Trash Icon;
+            :Confirm Deletion;
+        endif
+    }
+fork again
+    partition "Manage Levels" {
+        :View Levels List;
+        if (Action?) then (Add New)
+            :Click "Add Level";
+            :Enter Name & Description;
+            :Save Level;
+        else (Delete)
+            :Click Trash Icon;
+            :Confirm Deletion;
+        endif
+    }
+fork again
+    partition "Configuration" {
+        :Toggle Allowed Content Types;
+        :Set Upload Limits (Video/Image Size);
+        :Set Pricing Limits (Currency/Min/Max);
+        :Set Course Requirements (Min Lessons/Quiz Questions);
+    }
+end fork
+
+:Click "Save All Changes";
+|System|
+:Validate Settings;
+:Persist Global Settings;
+:Show Success Message;
+
+stop
+@enduml

@@ -1,137 +1,141 @@
-@startuml ERD - LearnHub E-Learning Platform
+@startuml ERD Diagram
 
-skinparam backgroundColor #FEFEFE
-skinparam linetype ortho
+' Database Schema Representation
 
-title Entity Relationship Diagram: LearnHub E-Learning Platform
-
-' ========== ENTITIES ==========
-
-entity "users" as users {
-    * id : INT <<PK>>
-    --
-    * email : VARCHAR(255) <<UNIQUE>>
-    * password : VARCHAR(255)
-    * name : VARCHAR(255)
-    avatar : VARCHAR(10)
-    * role : ENUM('customer','dosen','admin')
-    created_at : TIMESTAMP
-    updated_at : TIMESTAMP
+entity "users" {
+  *id : INT <<PK>>
+  --
+  email : VARCHAR(255) <<UNIQUE>>
+  password_hash : VARCHAR(255)
+  full_name : VARCHAR(100)
+  role : ENUM('customer', 'dosen', 'admin')
+  status : ENUM('active', 'inactive', 'banned')
+  avatar_url : VARCHAR(255)
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
 }
 
-entity "courses" as courses {
-    * id : INT <<PK>>
-    --
-    * title : VARCHAR(255)
-    * description : TEXT
-    * instructor_id : INT <<FK>>
-    instructor_avatar : VARCHAR(10)
-    * category_id : INT <<FK>>
-    * level : ENUM('Beginner','Intermediate','Advanced','All Levels')
-    duration : VARCHAR(50)
-    lessons_count : INT
-    students_count : INT
-    rating : DECIMAL(2,1)
-    reviews_count : INT
-    * price : DECIMAL(10,2)
-    * is_free : BOOLEAN
-    thumbnail : VARCHAR(500)
-    last_updated : DATE
-    created_at : TIMESTAMP
-    updated_at : TIMESTAMP
+entity "courses" {
+  *id : INT <<PK>>
+  --
+  *instructor_id : INT <<FK>>
+  *category_id : INT <<FK>>
+  *level_id : INT <<FK>>
+  title : VARCHAR(255)
+  description : TEXT
+  price : DECIMAL(10, 2)
+  is_free : BOOLEAN
+  thumbnail_url : VARCHAR(255)
+  status : ENUM('draft', 'published', 'archived')
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
 }
 
-entity "categories" as categories {
-    * id : INT <<PK>>
-    --
-    * name : VARCHAR(100)
-    icon : VARCHAR(50)
-    courses_count : INT
+entity "categories" {
+  *id : INT <<PK>>
+  --
+  name : VARCHAR(50)
+  slug : VARCHAR(50)
+  icon_key : VARCHAR(50)
 }
 
-entity "chapters" as chapters {
-    * id : INT <<PK>>
-    --
-    * course_id : INT <<FK>>
-    * title : VARCHAR(255)
-    * sort_order : INT
+entity "levels" {
+  *id : INT <<PK>>
+  --
+  name : VARCHAR(50)
+  description : VARCHAR(255)
 }
 
-entity "lessons" as lessons {
-    * id : INT <<PK>>
-    --
-    * chapter_id : INT <<FK>>
-    * title : VARCHAR(255)
-    * duration : VARCHAR(20)
-    video_url : VARCHAR(500)
-    * sort_order : INT
+entity "chapters" {
+  *id : INT <<PK>>
+  --
+  *course_id : INT <<FK>>
+  title : VARCHAR(100)
+  sort_order : INT
 }
 
-entity "enrollments" as enrollments {
-    * id : INT <<PK>>
-    --
-    * user_id : INT <<FK>>
-    * course_id : INT <<FK>>
-    enrolled_at : TIMESTAMP
-    completed_at : TIMESTAMP
-    progress : INT
+entity "contents" {
+  *id : INT <<PK>>
+  --
+  *chapter_id : INT <<FK>>
+  content_type : ENUM('video', 'pdf', 'link', 'quiz')
+  title : VARCHAR(100)
+  resource_url : VARCHAR(500)
+  duration_seconds : INT
+  is_required : BOOLEAN DEFAULT TRUE
+  sort_order : INT
 }
 
-entity "lesson_progress" as lesson_progress {
-    * id : INT <<PK>>
-    --
-    * user_id : INT <<FK>>
-    * lesson_id : INT <<FK>>
-    * completed : BOOLEAN
-    completed_at : TIMESTAMP
+entity "quiz_questions" {
+  *id : INT <<PK>>
+  --
+  *content_id : INT <<FK>>
+  question_text : TEXT
+  correct_answer_index : INT
+  options_array : JSON
 }
 
-entity "reviews" as reviews {
-    * id : INT <<PK>>
-    --
-    * course_id : INT <<FK>>
-    * user_id : INT <<FK>>
-    * rating : INT
-    comment : TEXT
-    * status : ENUM('pending','approved','rejected')
-    * created_at : TIMESTAMP
+entity "enrollments" {
+  *user_id : INT <<FK>>
+  *course_id : INT <<FK>>
+  --
+  enrolled_at : TIMESTAMP
+  completed_at : TIMESTAMP
+  last_accessed_at : TIMESTAMP
+  progress_percent : DECIMAL(5, 2)
+  PRIMARY_KEY(user_id, course_id)
 }
 
-entity "certificates" as certificates {
-    * id : VARCHAR(50) <<PK>>
-    --
-    * user_id : INT <<FK>>
-    * course_id : INT <<FK>>
-    * course_name : VARCHAR(255)
-    * user_name : VARCHAR(255)
-    * issued_date : DATE
-    created_at : TIMESTAMP
+entity "reviews" {
+  *id : INT <<PK>>
+  --
+  *user_id : INT <<FK>>
+  *course_id : INT <<FK>>
+  rating : TINYINT
+  comment : TEXT
+  status : ENUM('pending', 'approved', 'rejected')
+  created_at : TIMESTAMP
 }
 
-entity "course_tags" as course_tags {
-    * id : INT <<PK>>
-    --
-    * course_id : INT <<FK>>
-    * tag : VARCHAR(50)
+entity "certificates" {
+  *code : VARCHAR(20) <<PK>>
+  --
+  *user_id : INT <<FK>>
+  *course_id : INT <<FK>>
+  issued_at : DATE
+  pdf_url : VARCHAR(255)
 }
 
-' ========== RELATIONSHIPS ==========
+entity "wishlists" {
+  *user_id : INT <<FK>>
+  *course_id : INT <<FK>>
+  --
+  added_at : TIMESTAMP
+  PRIMARY_KEY(user_id, course_id)
+}
 
-users ||--o{ courses : "creates (as instructor)"
-users ||--o{ enrollments : "enrolls in"
-users ||--o{ reviews : "writes"
-users ||--o{ certificates : "owns"
-users ||--o{ lesson_progress : "tracks"
+entity "system_settings" {
+  *setting_key : VARCHAR(50) <<PK>>
+  --
+  setting_value : TEXT
+  description : VARCHAR(255)
+  updated_at : TIMESTAMP
+}
 
-courses ||--o{ enrollments : "has"
-courses ||--o{ chapters : "contains"
-courses ||--o{ reviews : "receives"
-courses ||--o{ certificates : "issues"
-courses ||--o{ course_tags : "has"
-courses }o--|| categories : "belongs to"
-
-chapters ||--o{ lessons : "contains"
-
-lessons ||--o{ lesson_progress : "tracked by"
+' Relationships
+users ||--o{ enrollments : "1:N"
+courses ||--o{ enrollments : "1:N"
+users ||--o{ courses : "instructor 1:N"
+categories ||--o{ courses : "1:N"
+levels ||--o{ courses : "1:N"
+courses ||--|{ chapters : "1:N"
+chapters ||--|{ contents : "1:N"
+contents ||--o{ quiz_questions : "1:N"
+users ||--o{ reviews : "1:N"
+courses ||--o{ reviews : "1:N"
+users ||--o{ certificates : "1:N"
+courses ||--o{ certificates : "1:N"
+users ||--o{ wishlists : "1:N"
+courses ||--o{ wishlists : "1:N"
 
 @enduml

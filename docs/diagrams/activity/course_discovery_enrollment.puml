@@ -1,0 +1,41 @@
+@startuml Activity Diagram - Course Discovery and Enrollment
+title Activity: Course Discovery and Enrollment
+
+skinparam backgroundColor #FEFEFE
+skinparam ActivityBackgroundColor #E3F2FD
+skinparam ActivityBorderColor #1565C0
+
+|Customer|
+start
+:Browse Course Catalog;
+:Filter by Category/Level;
+:Select Interesting Course;
+:View Course Details (Price, Rating, Content List);
+
+if (User Logged In?) then (No)
+    :Redirect to Login;
+    detach
+endif
+
+if (Already Enrolled?) then (Yes)
+    :Click "Continue Learning";
+    :Redirect to Watch/Read Page;
+    stop
+else (No)
+    if (Is Course Free?) then (Yes)
+        :Click "Enroll for Free";
+    else (No)
+        :Click "Buy Course";
+        :Process Payment (Mock);
+    endif
+    
+    |System|
+    :Add User to Enrolled List;
+    :Initialize Course Progress;
+    
+    |Customer|
+    :Redirect to Watch Course Page;
+endif
+
+stop
+@enduml
